@@ -1,3 +1,13 @@
 body {
   font-family: Arial, Helvetica, sans-serif;
+  background: #eee;
+  color: #333;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.container {
+  text-align: center;
 }
