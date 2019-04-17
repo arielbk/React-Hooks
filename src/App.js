@@ -26,21 +26,22 @@ export default function App() {
 
   return (
     <div className="container">
-      <h1>Hooks Trivia Game</h1>
-      {(isLoading && <div>Loading...</div>) || (!!Object.keys(challenge).length && <div>Question: <div dangerouslySetInnerHTML={challenge && { __html: challenge.question }} /></div>)}
+      <h1 className="title">Hooks Trivia Game</h1>
+      {(isLoading && <div className="loading"><div className="loading--spinner" /></div>) || (!!Object.keys(challenge).length && <div className="question"><h2>Question:</h2><div dangerouslySetInnerHTML={challenge && { __html: challenge.question }} /></div>)}
       {
         Object.keys(challenge).length
           ?
           <>
-            <button onClick={() => handleAnswer('False')}>False</button>
-            <button onClick={() => handleAnswer('True')}>True</button>
+            <button className="button button--false" onClick={() => handleAnswer('False')}>False</button>
+            <button className="button button--true" onClick={() => handleAnswer('True')}>True</button>
           </>
           :
-          <button onClick={newChallenge}>Start</button>
+          <button class="button button--start" onClick={newChallenge}>Start</button>
       }
+
       {didWin !== null && (didWin
-        ? <div style={{ color: '#1b1' }}>Correct</div>
-        : <div style={{ color: '#b11' }}>Incorrect</div>
+        ? <div class="result result--correct">Last answer was correct! :)</div>
+        : <div class="result result--incorrect">Last answer was incorrect :(</div>
       )}
     </div>
   );

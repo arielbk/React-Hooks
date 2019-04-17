@@ -3,11 +3,92 @@ body {
   background: #eee;
   color: #333;
   min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
 
 .container {
   text-align: center;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.title {
+  font-size: 3rem;
+  background: #333;
+  color: #fff;
+  transform: skew(0, -2deg);
+  text-transform: uppercase;
+  padding: 1rem 0.4rem;
+  display: inline-block;
+  margin: 2rem auto;
+}
+
+.button {
+  height: 3rem;
+  width: 12rem;
+  border: 1px solid white;
+  box-shadow: 0 0px 20px #fff;
+  transition: 0.3s;
+  cursor: pointer;
+  margin: 3rem 1rem;
+}
+.button:hover {
+  box-shadow: 0px 10px 20px #ccc;
+}
+.button:focus {
+  outline: 1px ridge #999;
+}
+
+.button--start {
+  font-size: 1.8rem;
+  height: 5rem;
+  width: 16rem;
+}
+.button--true {
+  border: 2px solid rgb(207, 230, 207);
+}
+.button--false {
+  border: 2px solid rgb(231, 196, 196);
+}
+
+.question {
+  line-height: 1.25;
+  height: 6rem;
+}
+
+@keyframes loading-spinner {
+  0% { transform: rotate(0) }
+  100% { transform: rotate(360deg) }
+}
+.loading {
+  height: 6rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.loading--spinner {
+  box-sizing: border-box;
+  height: 3rem;
+  width: 3rem;
+  border-radius: 100%;
+  border-top: 3px solid #333;
+  border-left: 3px solid #333;
+  animation: loading-spinner 0.7s linear infinite;
+}
+
+.result {
+  position: absolute;
+  bottom: 2rem;
+  left: 50%;
+  transform: translate(-50%) skew(0, -2deg);
+  font-size: 200%;
+  font-weight: 800;
+  color: #fff;
+  padding: 1rem 0.4rem;
+}
+
+.result--correct {
+  background: #1a1;
+}
+.result--incorrect {
+  background: #a11;
 }
