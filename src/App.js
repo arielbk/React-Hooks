@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 
 export default function App() {
+  // TODO: https://usehooks.com/useDarkMode/
+  // const [darkMode, setDarkMode] = useDarkMode();
+
   const [challenge, setChallenge] = useState({});
   const [didWin, setDidWin] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -27,6 +30,7 @@ export default function App() {
   return (
     <div className="container">
       <h1 className="title">Hooks Trivia Game</h1>
+      <div className="darkmode-toggle">☾ dark mode</div>
       {(isLoading && <div className="loading"><div className="loading--spinner" /></div>) || (!!Object.keys(challenge).length && <div className="question"><h2>Question:</h2><div dangerouslySetInnerHTML={challenge && { __html: challenge.question }} /></div>)}
       {
         Object.keys(challenge).length

@@ -44,6 +44,10 @@ It's important to note that it is just the *logic* that you are reusing, and not
 
 There are some other useful built-in hooks, too. Some of them are `useContext` to access context without wrapping your component, and `useReducer` to 'manage local state of complex components with a reducer'.
 
+# Hooks examples
+
+[Use Hooks](https://usehooks.com) has some great examples of hooks uses.
+
 # Hooks Practice
 
 I think the best way to learn about something new is to get an idea of it, then dive in and start tinkering and learning the nuances along the way.
