@@ -4,6 +4,9 @@ export default function App() {
   // TODO: https://usehooks.com/useDarkMode/
   // const [darkMode, setDarkMode] = useDarkMode();
 
+  // import custom hooks
+  const [name, setName] = useLocalStorage('name', '');
+
   const [challenge, setChallenge] = useState({});
   const [didWin, setDidWin] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -31,7 +34,18 @@ export default function App() {
     <div className="container">
       <h1 className="title">Hooks Trivia Game</h1>
       <div className="darkmode-toggle">☾ dark mode</div>
-      {(isLoading && <div className="loading"><div className="loading--spinner" /></div>) || (!!Object.keys(challenge).length && <div className="question"><h2>Question:</h2><div dangerouslySetInnerHTML={challenge && { __html: challenge.question }} /></div>)}
+      <input
+        type="text"
+        placeholder="Enter your name"
+        value={name}
+        onChange={e => setName(e.target.value)}
+      />
+      {(isLoading
+        && <div className="loading"><div className="loading--spinner" /></div>)
+        || (
+          !!Object.keys(challenge).length
+          && <div className="question"><h2>Question:</h2><div dangerouslySetInnerHTML={challenge && { __html: challenge.question }} /></div>
+        )}
       {
         Object.keys(challenge).length
           ?
@@ -49,4 +63,31 @@ export default function App() {
       )}
     </div>
   );
+}
+
+
+/**
+        CUSTOM HOOKS DOWN HERE
+this is a good place to define them, they are not the main function, but because they are regular functions they are still hoisted
+*/
+// https://usehooks.com/useLocalStorage/
+function useLocalStorage(key, initialValue) {
+  // checks if there is already localStorage, otherwise defaults to initialValue
+  const [storedValue, setStoredValue] = useState(() => {
+    const item = window.localStorage.getItem(key);
+    // parse stored json or default to initialValue
+    return item ? JSON.parse(item) : initialValue;
+  });
+
+  // wrapped version of useState's setter function
+  const setValue = value => {
+    // allow value to be a function se we have same api as useState
+    const valueToStore = value instanceof Function ? value(storedValue) : value;
+    // save state
+    setStoredValue(valueToStore);
+    // save to localStorage
+    window.localStorage.setItem(key, JSON.stringify(valueToStore));
+  }
+
+  return [storedValue, setValue];
 }
