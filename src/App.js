@@ -1,11 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 export default function App() {
-  // TODO: https://usehooks.com/useDarkMode/
-  // const [darkMode, setDarkMode] = useDarkMode();
-
   // import custom hooks
   const [name, setName] = useLocalStorage('name', '');
+  const [darkMode, setDarkMode] = useDarkMode();
 
   const [challenge, setChallenge] = useState({});
   const [didWin, setDidWin] = useState(null);
@@ -33,13 +31,12 @@ export default function App() {
   return (
     <div className="container">
       <h1 className="title">Hooks Trivia Game</h1>
-      <div className="darkmode-toggle">☾ dark mode</div>
-      <input
-        type="text"
-        placeholder="Enter your name"
-        value={name}
-        onChange={e => setName(e.target.value)}
-      />
+      <div className="darkmode-toggle" onClick={() => darkMode ? setDarkMode(false) : setDarkMode(true)}>
+        {darkMode
+          ? '	☼ light mode'
+          : ' ☾ dark mode'
+        }
+      </div>
       {(isLoading
         && <div className="loading"><div className="loading--spinner" /></div>)
         || (
@@ -70,6 +67,27 @@ export default function App() {
         CUSTOM HOOKS DOWN HERE
 this is a good place to define them, they are not the main function, but because they are regular functions they are still hoisted
 */
+
+// https://usehooks.com/useDarkMode/
+function useDarkMode() {
+  // persist state through page refresh
+  const [enabled, setEnabled] = useLocalStorage('dark-mode-enabled');
+
+  useEffect(() => {
+    const className = 'dark-mode';
+    const element = window.document.body;
+    if (enabled) {
+      element.classList.add(className);
+    } else {
+      element.classList.remove(className);
+    }
+  },
+    [enabled]
+  );
+
+  return [enabled, setEnabled];
+}
+
 // https://usehooks.com/useLocalStorage/
 function useLocalStorage(key, initialValue) {
   // checks if there is already localStorage, otherwise defaults to initialValue
