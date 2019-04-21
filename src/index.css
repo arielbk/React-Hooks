@@ -10,7 +10,7 @@ body.dark-mode {
 
 .container {
   text-align: center;
-  max-width: 850px;
+  max-width: 780px;
   padding: 0 1rem;
   margin: 0 auto 3rem;
 }
@@ -24,10 +24,12 @@ body.dark-mode {
   padding: 1rem 0.4rem;
   display: inline-block;
   margin: 2rem auto;
+  border-bottom: 6px solid #cc4;
 }
 .dark-mode .title {
   background: #eee;
   color: #333;
+  border-bottom: 6px solid #48f;
 }
 
 .darkmode-toggle {
@@ -50,6 +52,7 @@ body.dark-mode {
 }
 
 .button {
+  border-radius: 6px;
   height: 3rem;
   width: 12rem;
   border: 1px solid white;
@@ -81,10 +84,16 @@ body.dark-mode {
   width: 16rem;
 }
 .button--true {
-  border: 2px solid rgb(207, 230, 207);
+  border-bottom: 2px solid rgb(207, 230, 207);
+}
+.button--true:hover {
+  border-bottom: 2px solid rgb(73, 211, 73);
 }
 .button--false {
-  border: 2px solid rgb(231, 196, 196);
+  border-bottom: 2px solid rgb(231, 196, 196);
+}
+.button--false:hover {
+  border-bottom: 2px solid rgb(214, 66, 66);
 }
 
 .question {

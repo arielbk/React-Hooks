@@ -33,8 +33,8 @@ export default function App() {
       <h1 className="title">Hooks Trivia Game</h1>
       <div className="darkmode-toggle" onClick={() => darkMode ? setDarkMode(false) : setDarkMode(true)}>
         {darkMode
-          ? '	☼ light mode'
-          : ' ☾ dark mode'
+          ? '☀ light mode'
+          : '☾ dark mode'
         }
       </div>
       {(isLoading
@@ -55,8 +55,8 @@ export default function App() {
       }
 
       {didWin !== null && (didWin
-        ? <div class="result result--correct">Last answer was correct! :)</div>
-        : <div class="result result--incorrect">Last answer was incorrect :(</div>
+        ? <div class="result result--correct">Last answer was correct! 🙌</div>
+        : <div class="result result--incorrect">Last answer was incorrect 🤔</div>
       )}
     </div>
   );
