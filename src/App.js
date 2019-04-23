@@ -34,7 +34,7 @@ export default function App() {
       <select class="difficulty-selector" value={difficulty} onChange={e => setDifficulty(e.target.value)}>
         <option value="easy">Easy</option>
         <option value="medium">Medium</option>
-        <option value="difficult">Difficult</option>
+        <option value="hard">hard</option>
       </select>
       <div className="darkmode-toggle" onClick={() => darkMode ? setDarkMode(false) : setDarkMode(true)}>
         {darkMode
