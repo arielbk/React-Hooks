@@ -2,18 +2,18 @@ import React, { useState, useEffect } from 'react';
 
 export default function App() {
   // import custom hooks
-  const [name, setName] = useLocalStorage('name', '');
   const [darkMode, setDarkMode] = useDarkMode();
 
   const [challenge, setChallenge] = useState({});
   const [didWin, setDidWin] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [difficulty, setDifficulty] = useState('easy');
 
   const API = 'https://opentdb.com/api.php';
 
   const newChallenge = async () => {
     setIsLoading(true);
-    await fetch(`${API}?amount=1&type=boolean`)
+    await fetch(`${API}?amount=1&type=boolean&difficulty=${difficulty}`)
       .then(data => data.json())
       .then(res => setChallenge(res.results[0]));
     setIsLoading(false);
@@ -31,6 +31,11 @@ export default function App() {
   return (
     <div className="container">
       <h1 className="title">Hooks Trivia Game</h1>
+      <select class="difficulty-selector" value={difficulty} onChange={e => setDifficulty(e.target.value)}>
+        <option value="easy">Easy</option>
+        <option value="medium">Medium</option>
+        <option value="difficult">Difficult</option>
+      </select>
       <div className="darkmode-toggle" onClick={() => darkMode ? setDarkMode(false) : setDarkMode(true)}>
         {darkMode
           ? '☀ light mode'
