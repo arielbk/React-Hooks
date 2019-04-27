@@ -60,8 +60,8 @@ export default function App() {
       }
 
       {didWin !== null && (didWin
-        ? <div class="result result--correct">Last answer was correct! 🙌</div>
-        : <div class="result result--incorrect">Last answer was incorrect 🤔</div>
+        ? <div class="result result--correct">Last answer was correct! <span role="img" aria-label="congrats emoji">🙌</span></div>
+        : <div class="result result--incorrect">Last answer was incorrect <span role="img" aria-label="thinking emoji">🤔</span></div>
       )}
     </div>
   );
