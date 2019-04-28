@@ -68,9 +68,12 @@ body.dark-mode {
   cursor: pointer;
   margin: 0.3rem;
   font-size: 1.8rem;
+  z-index: 1;
+  position: relative;
 }
 .button:hover {
   box-shadow: 0px 10px 20px #ccc;
+  z-index: 2;
 }
 .button:focus {
   outline: 1px ridge #999;
@@ -90,16 +93,16 @@ body.dark-mode {
   width: 16rem;
 }
 .button--true {
-  border-bottom: 2px solid rgb(207, 230, 207);
+  border-bottom: 4px solid rgb(207, 230, 207);
 }
 .button--true:hover {
-  border-bottom: 2px solid rgb(73, 211, 73);
+  border-bottom: 4px solid rgb(73, 211, 73);
 }
 .button--false {
-  border-bottom: 2px solid rgb(231, 196, 196);
+  border-bottom: 4px solid rgb(231, 196, 196);
 }
 .button--false:hover {
-  border-bottom: 2px solid rgb(214, 66, 66);
+  border-bottom: 4px solid rgb(214, 66, 66);
 }
 
 .question {
