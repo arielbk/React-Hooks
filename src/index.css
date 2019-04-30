@@ -12,7 +12,7 @@ body.dark-mode {
   text-align: center;
   max-width: 780px;
   padding: 0 1rem;
-  margin: 0 auto 3rem;
+  margin: 0 auto 12rem;
 }
 
 .title {
@@ -76,7 +76,8 @@ body.dark-mode {
   z-index: 2;
 }
 .button:focus {
-  outline: 1px ridge #999;
+  outline: none;
+  border-bottom: 4px solid #999;
 }
 .dark-mode .button {
   box-shadow: 0 0 20px #222;
@@ -95,11 +96,17 @@ body.dark-mode {
 .button--true {
   border-bottom: 4px solid rgb(207, 230, 207);
 }
+.button--true:focus {
+  border-bottom: 4px solid rgb(28, 109, 28);
+}
 .button--true:hover {
   border-bottom: 4px solid rgb(73, 211, 73);
 }
 .button--false {
   border-bottom: 4px solid rgb(231, 196, 196);
+}
+.button--false:focus {
+  border-bottom: 4px solid rgb(126, 28, 28);
 }
 .button--false:hover {
   border-bottom: 4px solid rgb(214, 66, 66);
@@ -133,6 +140,7 @@ body.dark-mode {
 
 .result {
   position: fixed;
+  z-index: 99;
   bottom: 2rem;
   left: 50%;
   transform: translate(-50%) skew(0, -2deg);
