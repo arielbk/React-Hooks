@@ -33,9 +33,19 @@ body.dark-mode {
 }
 
 .difficulty-selector {
+  display: block;
+  margin: 4rem auto;
+  padding: 2rem;
+  font-size: 2rem;
+}
+
+.difficulty-display {
   position: absolute;
   top: 1rem;
-  left: 1rem;
+  left: 2rem;
+  text-transform: capitalize;
+  font-size: 1.4rem;
+  text-decoration: underline;
 }
 
 .darkmode-toggle {
@@ -59,14 +69,14 @@ body.dark-mode {
 
 .button {
   border-radius: 6px;
-  height: 5rem;
-  width: 16rem;
+  height: 7rem;
+  width: 14rem;
   border: 1px solid white;
   background: #fff;
   box-shadow: 0 0px 20px #fff;
   transition: 0.3s;
   cursor: pointer;
-  margin: 0.3rem;
+  margin: 0.5rem;
   font-size: 1.8rem;
   z-index: 1;
   position: relative;
@@ -115,7 +125,9 @@ body.dark-mode {
 .question {
   line-height: 1.25;
   height: 6rem;
-  margin-bottom: 3rem;
+  margin: 3rem;
+  font-size: 1.3rem;
+  line-height: 1.5;
 }
 
 @keyframes loading-spinner {
@@ -156,4 +168,25 @@ body.dark-mode {
 }
 .result--incorrect {
   background: #a11;
+}
+
+.reset-button {
+  font-size: 1.2rem;
+  margin: 3rem auto;
+  padding: 0.8rem 3rem;
+  border: 1px solid #ccc;
+  display: inline-block;
+  width: 30%;
+  cursor: pointer;
+}
+.reset-button:hover {
+  background: #777;
+  color: #eee;
+}
+.dark-mode .reset-button {
+  border: 1px solid #333;
+}
+.dark-mode .reset-button:hover {
+  background: #333;
+  color: #eee;
 }

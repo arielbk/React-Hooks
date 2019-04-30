@@ -32,14 +32,15 @@ export default function App() {
     newChallenge();
   }
 
+  const handleReset = () => {
+    setChallenge({});
+    setDidWin(null);
+    setIsLoading(false);
+  }
+
   return (
     <div className="container">
       <h1 className="title">Hooks Trivia Game</h1>
-      <select className="difficulty-selector" value={difficulty} onChange={e => setDifficulty(e.target.value)}>
-        <option value="easy">Easy</option>
-        <option value="medium">Medium</option>
-        <option value="hard">hard</option>
-      </select>
       <div className="darkmode-toggle" onClick={() => darkMode ? setDarkMode(false) : setDarkMode(true)}>
         {darkMode
           ? '☀ light mode'
@@ -50,17 +51,28 @@ export default function App() {
         && <div className="loading"><div className="loading--spinner" /></div>)
         || (
           !!Object.keys(challenge).length
-          && <div className="question"><h2>Question:</h2><div dangerouslySetInnerHTML={{ __html: challenge.question }} /></div>
+          && <div className="question"><div dangerouslySetInnerHTML={{ __html: challenge.question }} /></div>
         )}
+
       {
         Object.keys(challenge).length
           ?
           <>
-            <AnimatedButton cssClass="button button--false" clickHandler={() => handleAnswer('False')}>False</AnimatedButton>
             <AnimatedButton cssClass="button button--true" clickHandler={() => handleAnswer('True')}>True</AnimatedButton>
+            <AnimatedButton cssClass="button button--false" clickHandler={() => handleAnswer('False')}>False</AnimatedButton>
+            <div className="difficulty-display">{difficulty} Mode</div>
+            <div className="reset-button" onClick={handleReset}>Reset</div>
           </>
           :
-          <AnimatedButton cssClass="button button--start" clickHandler={newChallenge}>Start</AnimatedButton>
+          <>
+            <h3>Choose a difficulty: </h3>
+            <select className="difficulty-selector" value={difficulty} onChange={e => setDifficulty(e.target.value)}>
+              <option value="easy">Easy</option>
+              <option value="medium">Medium</option>
+              <option value="hard">Hard</option>
+            </select>
+            <AnimatedButton cssClass="button button--start" clickHandler={newChallenge}>Start</AnimatedButton>
+          </>
       }
 
       {didWin !== null && (didWin
