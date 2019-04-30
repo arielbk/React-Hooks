@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import Dropdown from 'react-dropdown';
+import 'react-dropdown/style.css';
 
 import { useDarkMode, AnimatedButton, Message } from './hooks';
 
@@ -65,12 +67,8 @@ export default function App() {
           </>
           :
           <>
-            <h3>Choose a difficulty: </h3>
-            <select className="difficulty-selector" value={difficulty} onChange={e => setDifficulty(e.target.value)}>
-              <option value="easy">Easy</option>
-              <option value="medium">Medium</option>
-              <option value="hard">Hard</option>
-            </select>
+            <h2>Select a difficulty</h2>
+            <Dropdown className="difficulty-selector" options={['easy', 'medium', 'hard']} value="easy" onChange={e => setDifficulty(e.value)} />
             <AnimatedButton cssClass="button button--start" clickHandler={newChallenge}>Start</AnimatedButton>
           </>
       }
