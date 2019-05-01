@@ -2,6 +2,6 @@
 
 import useDarkMode from './useDarkMode';
 import useLocalStorage from './useLocalStorage';
-import { AnimatedButton, Message } from './useSpring';
+import { AnimatedButton } from './useSpring';
 
-export { useDarkMode, useLocalStorage, AnimatedButton, Message };
+export { useDarkMode, useLocalStorage, AnimatedButton };

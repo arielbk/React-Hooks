@@ -42,7 +42,7 @@ body.dark-mode {
 
 .difficulty-display {
   position: absolute;
-  top: 1rem;
+  top: 2rem;
   left: 2rem;
   text-transform: capitalize;
   font-size: 1.4rem;
@@ -52,7 +52,7 @@ body.dark-mode {
 .darkmode-toggle {
   font-weight: 600;
   position: absolute;
-  top: 1rem;
+  top: 2rem;
   right: 1rem;
   cursor: pointer;
   padding: 0.5rem;
@@ -81,6 +81,7 @@ body.dark-mode {
   font-size: 1.8rem;
   z-index: 1;
   position: relative;
+  background: #f9f9f9;
 }
 .button:hover {
   box-shadow: 0px 10px 20px #ccc;
@@ -102,6 +103,7 @@ body.dark-mode {
 }
 
 .button--start {
+  background: #fff;
   height: 5rem;
   width: 16rem;
 }
@@ -124,18 +126,21 @@ body.dark-mode {
   border-bottom: 4px solid rgb(214, 66, 66);
 }
 
-.question {
+.question-area {
   line-height: 1.25;
-  height: 6rem;
   margin: 3rem;
   font-size: 1.2rem;
   line-height: 1.5;
   background: #fff;
-  padding: 2rem 2rem 0;
-  border-radius: 6px;
+  padding: 3em;
+  border-radius: 24px;
 }
-.dark-mode .question {
+.dark-mode .question-area {
   background: #191919;
+}
+
+.question-text {
+  padding-bottom: 2rem;
 }
 
 @keyframes loading-spinner {
@@ -160,14 +165,18 @@ body.dark-mode {
 
 .result {
   position: fixed;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  bottom: 0;
+  left: 0;
+  width: 100vw;
+  height: 1rem;
   z-index: 99;
-  bottom: 2rem;
-  left: 50%;
-  transform: translate(-50%) skew(0, -2deg);
-  font-size: 200%;
+  font-size: 1.5rem;
   font-weight: 800;
   color: #fff;
-  padding: 1rem 0.4rem;
+  padding: 1rem;
   opacity: 0.9;
 }
 
@@ -179,28 +188,32 @@ body.dark-mode {
 }
 
 .reset-button {
-  border-radius: 6px;
-  font-size: 1.2rem;
-  margin: 5rem auto;
-  padding: 0.8rem 3rem;
-  border: 1px solid #ccc;
-  display: inline-block;
-  width: 35%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 3rem;
+  margin: 3rem auto;
+  border: none;
+  outline: none;
+  height: 5rem;
+  width: 5rem;
   cursor: pointer;
-  transition: background 0.3s;
-  color: #555;
+  background: none;
+  border-radius: 50%;
+}
+.reset-button svg {
+  position: relative;
+  left: 0;
 }
 .reset-button:hover {
-  background: #777;
-  color: #eee;
+  color: #000;
 }
 .dark-mode .reset-button {
-  border: 1px solid #333;
   background: #222;
   color: #ccc;
 }
 .dark-mode .reset-button:hover {
-  background: #333;
+  color: #fff;
 }
 
 button {
