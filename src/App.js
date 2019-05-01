@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Dropdown from 'react-dropdown';
 import 'react-dropdown/style.css';
-import { FaPlay, FaRedoAlt, FaCheck, FaTimes } from 'react-icons/fa';
+import { FaPlay, FaRedoAlt, FaCheck, FaTimes, FaThermometerEmpty, FaThermometerHalf, FaThermometerFull } from 'react-icons/fa';
 
 import { useDarkMode, AnimatedButton } from './hooks';
 import ProgressBar from './ProgressBar';
@@ -57,6 +57,19 @@ export default function App() {
     setIsGameFinished(false);
   }
 
+  let difficultyIcon;
+  switch (difficulty) {
+    case ('easy'):
+      difficultyIcon = <FaThermometerEmpty />
+      break;
+    case ('medium'):
+      difficultyIcon = <FaThermometerHalf />
+      break;
+    case ('hard'):
+    default:
+      difficultyIcon = <FaThermometerFull />
+  }
+
   return (
     <div className="container">
 
@@ -90,7 +103,7 @@ export default function App() {
               Object.keys(challenge).length
                 ?
                 <>
-                  <div className="difficulty-display">{difficulty} Mode</div>
+                  <div className="difficulty-display">{difficulty} Mode {difficultyIcon}</div>
                   <button className="reset-button" onClick={handleReset}><FaRedoAlt /></button>
                 </>
                 :
