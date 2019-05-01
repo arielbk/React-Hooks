@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Dropdown from 'react-dropdown';
 import 'react-dropdown/style.css';
+import { FaPlay, FaRedoAlt, FaCheck, FaTimes } from 'react-icons/fa';
 
 import { useDarkMode, AnimatedButton, Message } from './hooks';
 
@@ -60,16 +61,16 @@ export default function App() {
         Object.keys(challenge).length
           ?
           <>
-            <AnimatedButton cssClass="button button--true" clickHandler={() => handleAnswer('True')}>True</AnimatedButton>
-            <AnimatedButton cssClass="button button--false" clickHandler={() => handleAnswer('False')}>False</AnimatedButton>
+            <AnimatedButton cssClass="button button--true" clickHandler={() => handleAnswer('True')}><FaCheck /> True</AnimatedButton>
+            <AnimatedButton cssClass="button button--false" clickHandler={() => handleAnswer('False')}><FaTimes />False</AnimatedButton>
             <div className="difficulty-display">{difficulty} Mode</div>
-            <div className="reset-button" onClick={handleReset}>Reset</div>
+            <button className="reset-button" onClick={handleReset}><FaRedoAlt /> Reset</button>
           </>
           :
           <>
-            <h2>Select a difficulty</h2>
+            <h2>Select a difficulty:</h2>
             <Dropdown className="difficulty-selector" options={['easy', 'medium', 'hard']} value="easy" onChange={e => setDifficulty(e.value)} />
-            <AnimatedButton cssClass="button button--start" clickHandler={newChallenge}>Start</AnimatedButton>
+            <AnimatedButton cssClass="button button--start" clickHandler={newChallenge}><FaPlay /> Start</AnimatedButton>
           </>
       }
 
