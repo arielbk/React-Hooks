@@ -92,8 +92,8 @@ export default function App() {
       <h1 className="title">Hooks Trivia Game</h1>
       <div className="darkmode-toggle" onClick={() => darkMode ? setDarkMode(false) : setDarkMode(true)}>
         {darkMode
-          ? '☀ light mode'
-          : '☾ dark mode'
+          ? '☀ Light Mode'
+          : '☾ Dark Mode'
         }
       </div>
 
