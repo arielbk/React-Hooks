@@ -17,7 +17,7 @@ export default function App() {
   const [didWin, setDidWin] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [difficulty, setDifficulty] = useState('easy');
-  const [isGameFinished, setIsGameFinished] = useState(false);
+  const [inProgress, setInProgress] = useState(false);
 
   const API = 'https://opentdb.com/api.php';
 
@@ -26,14 +26,15 @@ export default function App() {
     await fetch(`${API}?amount=1&type=boolean&difficulty=${difficulty}`)
       .then(data => data.json())
       .then(res => {
+        const newHistory = [...challengeHistory, res.results[0]];
+        if (newHistory.length >= numberQuestions + 1) return setInProgress(false);
         // check if question has already been asked, if yes, get a new one
         if (challengeHistory.some(challenge => challenge.question === res.results[0].question)) {
           return newChallenge();
         }
         setChallenge(res.results[0]);
-        const newHistory = [...challengeHistory, res.results[0]];
-        if (newHistory.length >= numberQuestions + 1) return setIsGameFinished(true);
         setChallengeHistory(newHistory);
+        setInProgress(true);
       });
     setIsLoading(false);
   }
@@ -54,7 +55,7 @@ export default function App() {
     setNumberCorrect(0);
     setDidWin(null);
     setIsLoading(false);
-    setIsGameFinished(false);
+    setInProgress(false);
   }
 
   let difficultyIcon;
@@ -89,17 +90,18 @@ export default function App() {
     <div className="container">
 
       {/* header */}
-      <h1 className="title">Hooks Trivia Game</h1>
+      <h1 className={`title ${inProgress && 'in-progress'}`}>Hooks Trivia Game</h1>
       <div className="darkmode-toggle" onClick={() => darkMode ? setDarkMode(false) : setDarkMode(true)}>
         {darkMode
-          ? '☀ Light Mode'
-          : '☾ Dark Mode'
+          ? '☀ Light Theme'
+          : '☾ Dark Theme'
         }
       </div>
 
-      <ProgressBar progress={(!isGameFinished || !Object.keys(challenge).length) ? (challengeHistory.length - 1) / numberQuestions : 1} darkMode={darkMode} />
+      <ProgressBar progress={(!inProgress || !Object.keys(challenge).length) ? 1 : (challengeHistory.length - 1) / numberQuestions} darkMode={darkMode} />
 
-      {!isGameFinished
+      {(inProgress && (Object.keys(challengeHistory).length < (numberQuestions + 1)))
+        || (!inProgress && Object.keys(challengeHistory).length === 0)
         ? (
           <>
             {/* question or loading indicator*/}

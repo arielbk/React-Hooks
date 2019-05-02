@@ -1,18 +1,21 @@
 body {
   font-family: Helvetica, Arial, sans-serif;
   background: #eee;
+  background: linear-gradient(#fff, #eee);
+  min-height: 100vh;
   color: #333;
 }
 body.dark-mode {
   background: #222;
+  background: linear-gradient(#222, #191919);
   color: #eee;
 }
 
 .container {
   text-align: center;
   max-width: 780px;
-  padding: 0 1rem;
-  margin: 4rem auto;
+  padding: 3rem 1rem;
+  margin: 0 auto;
 }
 
 .title {
@@ -22,6 +25,15 @@ body.dark-mode {
   padding: 1rem 0.4rem 0;
   display: inline-block;
   margin: 2rem auto 0;
+  transition: 0.3s;
+}
+.title.in-progress {
+  font-size: 2rem;
+}
+
+h2 {
+  font-weight: 400;
+  margin: 4rem 0 2rem;
 }
 
 .difficulty-selector {
@@ -39,9 +51,9 @@ body.dark-mode {
   left: 1rem;
   text-transform: capitalize;
   padding: 0.5rem;
-  background: rgba(0,0,0,0.8);
+  background: rgba(0,0,0,0.6);
   border-radius: 5px;
-  color: #999;
+  color: #aaa;
   transition: 0.3s color;
 }
 
@@ -52,9 +64,9 @@ body.dark-mode {
   right: 1rem;
   cursor: pointer;
   padding: 0.5rem;
-  background: rgba(0,0,0,0.8);
+  background: rgba(0,0,0,0.6);
   border-radius: 5px;
-  color: #999;
+  color: #aaa;
   transition: 0.3s color;
 }
 .darkmode-toggle:hover {
@@ -181,6 +193,10 @@ body.dark-mode {
   color: #fff;
   padding: 1rem;
   opacity: 0.8;
+}
+.result span {
+  position: absolute;
+  right: 3rem;
 }
 
 .result--correct {
