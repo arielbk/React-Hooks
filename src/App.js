@@ -70,6 +70,21 @@ export default function App() {
       difficultyIcon = <FaThermometerFull />
   }
 
+  let finishRemark;
+  if (numberCorrect < numberQuestions / 2) {
+    finishRemark = 'Abysmal!';
+  } else if (numberCorrect < numberQuestions / 2 + numberQuestions / 3) {
+    finishRemark = 'Could be better...';
+  } else if (numberCorrect < numberQuestions - numberQuestions / 10) {
+    finishRemark = 'Pretty good!';
+  } else if (numberCorrect < numberQuestions - 1) {
+    finishRemark = 'Very good!';
+  } else if (numberCorrect === numberQuestions) {
+    finishRemark = 'Perfect!';
+  } else {
+    finishRemark = 'It\'s over!';
+  }
+
   return (
     <div className="container">
 
@@ -122,9 +137,9 @@ export default function App() {
           </>
         ) :
         <div className="game-finish">
-          <h2>It's Over!</h2>
+          <h2>{finishRemark}</h2>
           <p>You got {numberCorrect} out of {numberQuestions} correct</p>
-          <button className="reset-button" onClick={handleReset}><FaRedoAlt /> Try Again</button>
+          <button className="reset-button" onClick={handleReset}><FaRedoAlt /></button>
         </div>
       }
     </div>
