@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useReducer } from 'react';
 import Dropdown from 'react-dropdown';
 import 'react-dropdown/style.css';
 import { FaPlay, FaRedoAlt, FaCheck, FaTimes, FaThermometerEmpty, FaThermometerHalf, FaThermometerFull } from 'react-icons/fa';
@@ -6,56 +6,79 @@ import { FaPlay, FaRedoAlt, FaCheck, FaTimes, FaThermometerEmpty, FaThermometerH
 import { useDarkMode, AnimatedButton } from './hooks';
 import ProgressBar from './ProgressBar';
 
+const API = 'https://opentdb.com/api.php';
+const NUMBER_QUESTIONS = 20;
+
+const initialState = {
+  challenge: {},
+  challengeHistory: [],
+  numberCorrect: 0,
+  didWin: null,
+  inProgress: false,
+}
+
+function reducer(state, action) {
+  switch (action.type) {
+    case 'START_GAME': return {
+      ...state,
+      challenge: action.payload,
+      inProgress: true,
+    };
+    case 'CORRECT_ANSWER': return {
+      ...state,
+      challenge: action.payload,
+      challengeHistory: [...state.challengeHistory, state.challenge],
+      numberCorrect: state.numberCorrect + 1,
+      didWin: true,
+    }
+    case 'WRONG_ANSWER': return {
+      ...state,
+      challenge: action.payload,
+      challengeHistory: [...state.challengeHistory, state.challenge],
+      didWin: false,
+    }
+    case 'END_GAME': return {
+      ...state,
+      challenge: null,
+      challengeHistory: [...state.challengeHistory, state.challenge],
+      inProgress: false
+    }
+    case 'RESET': return {
+      ...state,
+      ...initialState,
+    }
+    default: throw new Error();
+  }
+};
+
 export default function App() {
-  const numberQuestions = 20;
-
   const [darkMode, setDarkMode] = useDarkMode();
-
-  const [challenge, setChallenge] = useState({});
-  const [challengeHistory, setChallengeHistory] = useState([]);
-  const [numberCorrect, setNumberCorrect] = useState(0);
-  const [didWin, setDidWin] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [difficulty, setDifficulty] = useState('easy');
-  const [inProgress, setInProgress] = useState(false);
-
-  const API = 'https://opentdb.com/api.php';
+  const [state, dispatch] = useReducer(reducer, initialState);
 
   const newChallenge = async () => {
     setIsLoading(true);
-    await fetch(`${API}?amount=1&type=boolean&difficulty=${difficulty}`)
+    const challenge = await fetch(`${API}?amount=1&type=boolean&difficulty=${difficulty}`)
       .then(data => data.json())
       .then(res => {
-        const newHistory = [...challengeHistory, res.results[0]];
-        if (newHistory.length >= numberQuestions + 1) return setInProgress(false);
+        if (state.challengeHistory.length === NUMBER_QUESTIONS - 1) return dispatch({ type: 'END_GAME' });
         // check if question has already been asked, if yes, get a new one
-        if (challengeHistory.some(challenge => challenge.question === res.results[0].question)) {
+        if (state.challengeHistory.some(challenge => challenge.question === res.results[0].question)) {
           return newChallenge();
         }
-        setChallenge(res.results[0]);
-        setChallengeHistory(newHistory);
-        setInProgress(true);
+        return res.results[0];
       });
     setIsLoading(false);
+    return challenge;
   }
 
-  const handleAnswer = (answer) => {
-    if (challenge.correct_answer === answer) {
-      setNumberCorrect(numberCorrect + 1);
-      setDidWin(true);
+  const handleAnswer = async (answer) => {
+    if (state.challenge.correct_answer === answer) {
+      dispatch({ type: 'CORRECT_ANSWER', payload: await newChallenge() });
     } else {
-      setDidWin(false);
+      dispatch({ type: 'WRONG_ANSWER', payload: await newChallenge() });
     }
-    newChallenge();
-  }
-
-  const handleReset = () => {
-    setChallenge({});
-    setChallengeHistory([]);
-    setNumberCorrect(0);
-    setDidWin(null);
-    setIsLoading(false);
-    setInProgress(false);
   }
 
   let difficultyIcon;
@@ -72,15 +95,15 @@ export default function App() {
   }
 
   let finishRemark;
-  if (numberCorrect < numberQuestions / 2) {
+  if (state.numberCorrect < NUMBER_QUESTIONS / 2) {
     finishRemark = 'Abysmal!';
-  } else if (numberCorrect < numberQuestions / 2 + numberQuestions / 3) {
+  } else if (state.numberCorrect < NUMBER_QUESTIONS / 2 + NUMBER_QUESTIONS / 3) {
     finishRemark = 'Could be better...';
-  } else if (numberCorrect < numberQuestions - numberQuestions / 10) {
+  } else if (state.numberCorrect < NUMBER_QUESTIONS - NUMBER_QUESTIONS / 10) {
     finishRemark = 'Pretty good!';
-  } else if (numberCorrect < numberQuestions - 1) {
+  } else if (state.numberCorrect < NUMBER_QUESTIONS - 1) {
     finishRemark = 'Very good!';
-  } else if (numberCorrect === numberQuestions) {
+  } else if (state.numberCorrect === NUMBER_QUESTIONS) {
     finishRemark = 'Perfect!';
   } else {
     finishRemark = 'It\'s over!';
@@ -90,7 +113,7 @@ export default function App() {
     <div className="container">
 
       {/* header */}
-      <h1 className={`title ${inProgress && 'in-progress'}`}>Hooks Trivia Game</h1>
+      <h1 className={`title ${state.inProgress && 'in-progress'}`}>Hooks Trivia Game</h1>
       <div className="darkmode-toggle" onClick={() => darkMode ? setDarkMode(false) : setDarkMode(true)}>
         {darkMode
           ? '☀ Light Theme'
@@ -98,41 +121,39 @@ export default function App() {
         }
       </div>
 
-      <ProgressBar progress={(!inProgress || !Object.keys(challenge).length) ? 1 : (challengeHistory.length - 1) / numberQuestions} darkMode={darkMode} />
+      <ProgressBar progress={(!state.inProgress || !Object.keys(state.challenge).length) ? 1 : (state.challengeHistory.length - 1) / NUMBER_QUESTIONS} darkMode={darkMode} />
 
-      {(inProgress && (Object.keys(challengeHistory).length < (numberQuestions + 1)))
-        || (!inProgress && Object.keys(challengeHistory).length === 0)
+
+      {(state.inProgress && (Object.keys(state.challengeHistory).length < (NUMBER_QUESTIONS + 1)))
+        || (!state.inProgress && Object.keys(state.challengeHistory).length === 0)
         ? (
           <>
             {/* question or loading indicator*/}
-            {(isLoading
-              && <div className="loading"><div className="loading--spinner" /></div>)
-              || (
-                !!Object.keys(challenge).length
+            {(isLoading && <div className="loading"><div className="loading--spinner" /></div>)
+              || (!!Object.keys(state.challenge).length
                 && <div className="question-area">
-                  <div className="question-text" dangerouslySetInnerHTML={{ __html: challenge.question }} />
+                  <div className="question-text" dangerouslySetInnerHTML={{ __html: state.challenge.question }} />
                   <AnimatedButton cssClass="button button--true" clickHandler={() => handleAnswer('True')}><FaCheck /> True</AnimatedButton>
                   <AnimatedButton cssClass="button button--false" clickHandler={() => handleAnswer('False')}><FaTimes />False</AnimatedButton>
                 </div>
               )}
             {/* Gameplay buttons */}
             {
-              Object.keys(challenge).length
+              Object.keys(state.challenge).length
                 ?
                 <>
                   <div className="difficulty-display">{difficulty} Mode {difficultyIcon}</div>
-                  <button className="reset-button" onClick={handleReset}><FaRedoAlt /></button>
+                  <button className="reset-button" onClick={() => dispatch({ type: 'RESET' })}><FaRedoAlt /></button>
                 </>
                 :
                 <>
                   <h2>Select a difficulty:</h2>
                   <Dropdown className="difficulty-selector" options={['easy', 'medium', 'hard']} value="easy" onChange={e => setDifficulty(e.value)} />
-                  <AnimatedButton cssClass="button button--start" clickHandler={newChallenge}><FaPlay /> Start</AnimatedButton>
+                  <AnimatedButton cssClass="button button--start" clickHandler={async () => dispatch({ type: 'START_GAME', payload: await newChallenge() })}><FaPlay /> Start</AnimatedButton>
                 </>
             }
-
             {/* didWin indicator */}
-            {didWin !== null && (didWin
+            {state.didWin !== null && (state.didWin
               ? <div className="result result--correct">Last answer was correct! {' '}<span role="img" aria-label="congrats emoji">🙌</span></div>
               : <div className="result result--incorrect">Last answer was incorrect {' '}<span role="img" aria-label="thinking emoji">🤔</span></div>
             )}
@@ -140,8 +161,8 @@ export default function App() {
         ) :
         <div className="game-finish">
           <h2>{finishRemark}</h2>
-          <p>You got {numberCorrect} out of {numberQuestions} correct</p>
-          <button className="reset-button" onClick={handleReset}><FaRedoAlt /></button>
+          <p>You got {state.numberCorrect} out of {NUMBER_QUESTIONS} correct</p>
+          <button className="reset-button" onClick={() => dispatch({ type: 'RESET' })}><FaRedoAlt /></button>
         </div>
       }
     </div>
