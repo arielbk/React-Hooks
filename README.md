@@ -2,7 +2,23 @@
 
 It's about time I learnt about React hooks.
 
+- [React Hooks Playground](#react-hooks-playground)
+- [Resources](#resources)
+- [Built-in hooks](#built-in-hooks)
+  - [State Hook](#state-hook)
+  - [Effect Hook](#effect-hook)
+    - [Passing a second argument to the `useEffect` hook](#passing-a-second-argument-to-the-useeffect-hook)
+- [Rules for hooks](#rules-for-hooks)
+- [Creating your own hook](#creating-your-own-hook)
+- [Other hooks](#other-hooks)
+- [Hooks examples](#hooks-examples)
+- [Hooks Practice](#hooks-practice)
+
+# Resources
+
 [React Hooks Docs](https://reactjs.org/docs/hooks-intro.html)
+
+Watch the [React Conf video on React Hooks with Sophie Alpert and Dan Abramov](https://www.youtube.com/watch?time_continue=131&v=dpw9EHDh2bM).
 
 # Built-in hooks
 ## State Hook
@@ -17,17 +33,24 @@ So this seems to be the starting point of hooks. This is the *state hook*. This 
 You can set as many of these as you'd like.
 
 ## Effect Hook
-Effects is short for side-effects. These are the things that you would have normally put into `componentDidMount`, `componentWillUpdate` and `componentWillUpdate`.
+Effects is short for side-effects. These are the things that you would have normally put into `componentDidMount`, `componentDidUpdate` and `componentWillUnmount`.
 
 ```js
 useEffect(() => {
-  // Update the document title using the browser API
+  // This will happen on mount
   document.title = `You clicked ${count} times`;
+  document.addEventListener('click', () => console.log('click!'));
+
+  // A returned function will happen on unmount (cleanup)
+  return () => document.removeEventListener('click', () => console.log('click'));
 });
 ```
 So by default the effect will run after every render (including the first render).
 
 To clean up after an effect, you can return a callback function from within the effect that will run before every rerender or unmounting.
+
+### Passing a second argument to the `useEffect` hook
+Pass an array to `useEffect` as a second argument to define what should be checked on every update before running the effect again (i.e. cleaning up and starting over).
 
 # Rules for hooks
 There are two basic rules, essential to hooks running properly:
@@ -50,7 +73,7 @@ There are some other useful built-in hooks, too. Some of them are `useContext` t
 
 # Hooks Practice
 
-I think the best way to learn about something new is to get an idea of it, then dive in and start tinkering and learning the nuances along the way.
+I think the best way to learn about something new is to get a general idea about it, then dive in and start tinkering and learning the nuances along the way.
 
 I'll continue to add notes above as I go.
 
