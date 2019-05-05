@@ -12,7 +12,8 @@ import ProgressBar from './components/ProgressBar';
 
 import { useDarkMode, AnimatedButton } from './hooks';
 
-const API = 'https://opentdb.com/api.php';
+// get one challenge at a time (this is mostly for hooks practice)
+const API = 'https://opentdb.com/api.php?amount=1&type=boolean';
 const NUMBER_QUESTIONS = 20;
 
 export default function App() {
@@ -22,12 +23,20 @@ export default function App() {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   useEffect(() => {
+    // don't load a question on app load
+    if (!state.inProgress) return;
+
+    // check if the game should end
+    if (state.challengeHistory.length === NUMBER_QUESTIONS) return dispatch({ type: 'END_GAME' });
+
+    // checks if the effect is the latest (use case: if the user double clicks a button)
+    let current = true;
+
     const newChallenge = async () => {
       setIsLoading(true);
-      const challenge = await fetch(`${API}?amount=1&type=boolean&difficulty=${difficulty}`)
+      const challenge = await fetch(`${API}&difficulty=${difficulty}`)
         .then(data => data.json())
         .then(res => {
-          if (state.challengeHistory.length === NUMBER_QUESTIONS - 1) return dispatch({ type: 'END_GAME' });
           // check if question has already been asked, if yes, get a new one
           if (state.challengeHistory.some(challenge => challenge.question === res.results[0].question)) {
             return newChallenge();
@@ -37,16 +46,25 @@ export default function App() {
       setIsLoading(false);
       return challenge;
     }
-    newChallenge().then(challenge => dispatch({ type: 'SET_CHALLENGE', payload: challenge }));
-  }, [state.challengeHistory])
+    if (current) newChallenge().then(challenge => dispatch({ type: 'SET_CHALLENGE', payload: challenge }));
 
-  const handleAnswer = async (answer) => {
+    // clean up function
+    return () => {
+      current = false;
+    }
+
+    // dependency array
+  }, [state.challengeHistory, state.inProgress])
+
+  const handleAnswer = (answer) => {
     if (state.challenge.correct_answer === answer) {
       dispatch({ type: 'CORRECT_ANSWER' });
     } else {
       dispatch({ type: 'WRONG_ANSWER' });
     }
   }
+
+  console.log(state.challengeHistory);
 
   return (
     <div className="container">
@@ -60,7 +78,7 @@ export default function App() {
         }
       </div>
 
-      <ProgressBar progress={(!state.inProgress || !Object.keys(state.challenge).length) ? 1 : (state.challengeHistory.length - 1) / NUMBER_QUESTIONS} darkMode={darkMode} />
+      <ProgressBar progress={!state.inProgress ? 1 : (state.challengeHistory.length) / NUMBER_QUESTIONS} darkMode={darkMode} />
 
 
       {(state.inProgress && (Object.keys(state.challengeHistory).length < (NUMBER_QUESTIONS + 1)))

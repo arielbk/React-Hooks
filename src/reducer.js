@@ -29,8 +29,6 @@ export default function reducer(state, action) {
     }
     case 'END_GAME': return {
       ...state,
-      challenge: null,
-      challengeHistory: [...state.challengeHistory, state.challenge],
       inProgress: false
     }
     case 'RESET': return {
