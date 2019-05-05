@@ -8,21 +8,22 @@ export const initialState = {
 
 export default function reducer(state, action) {
   switch (action.type) {
-    case 'START_GAME': return {
+    case 'SET_CHALLENGE': return {
       ...state,
       challenge: action.payload,
+    }
+    case 'START_GAME': return {
+      ...state,
       inProgress: true,
     };
     case 'CORRECT_ANSWER': return {
       ...state,
-      challenge: action.payload,
       challengeHistory: [...state.challengeHistory, state.challenge],
       numberCorrect: state.numberCorrect + 1,
       didWin: true,
     }
     case 'WRONG_ANSWER': return {
       ...state,
-      challenge: action.payload,
       challengeHistory: [...state.challengeHistory, state.challenge],
       didWin: false,
     }

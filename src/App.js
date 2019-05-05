@@ -1,4 +1,4 @@
-import React, { useState, useReducer } from 'react';
+import React, { useState, useReducer, useEffect } from 'react';
 import Dropdown from 'react-dropdown';
 import 'react-dropdown/style.css';
 import { FaPlay, FaRedoAlt, FaCheck, FaTimes } from 'react-icons/fa';
@@ -21,27 +21,30 @@ export default function App() {
   const [difficulty, setDifficulty] = useState('easy');
   const [state, dispatch] = useReducer(reducer, initialState);
 
-  const newChallenge = async () => {
-    setIsLoading(true);
-    const challenge = await fetch(`${API}?amount=1&type=boolean&difficulty=${difficulty}`)
-      .then(data => data.json())
-      .then(res => {
-        if (state.challengeHistory.length === NUMBER_QUESTIONS - 1) return dispatch({ type: 'END_GAME' });
-        // check if question has already been asked, if yes, get a new one
-        if (state.challengeHistory.some(challenge => challenge.question === res.results[0].question)) {
-          return newChallenge();
-        }
-        return res.results[0];
-      });
-    setIsLoading(false);
-    return challenge;
-  }
+  useEffect(() => {
+    const newChallenge = async () => {
+      setIsLoading(true);
+      const challenge = await fetch(`${API}?amount=1&type=boolean&difficulty=${difficulty}`)
+        .then(data => data.json())
+        .then(res => {
+          if (state.challengeHistory.length === NUMBER_QUESTIONS - 1) return dispatch({ type: 'END_GAME' });
+          // check if question has already been asked, if yes, get a new one
+          if (state.challengeHistory.some(challenge => challenge.question === res.results[0].question)) {
+            return newChallenge();
+          }
+          return res.results[0];
+        });
+      setIsLoading(false);
+      return challenge;
+    }
+    newChallenge().then(challenge => dispatch({ type: 'SET_CHALLENGE', payload: challenge }));
+  }, [state.challengeHistory])
 
   const handleAnswer = async (answer) => {
     if (state.challenge.correct_answer === answer) {
-      dispatch({ type: 'CORRECT_ANSWER', payload: await newChallenge() });
+      dispatch({ type: 'CORRECT_ANSWER' });
     } else {
-      dispatch({ type: 'WRONG_ANSWER', payload: await newChallenge() });
+      dispatch({ type: 'WRONG_ANSWER' });
     }
   }
 
@@ -66,7 +69,7 @@ export default function App() {
           <>
             {/* question or loading indicator*/}
             {(isLoading && <div className="loading"><div className="loading--spinner" /></div>)
-              || (!!Object.keys(state.challenge).length
+              || (state.inProgress
                 && <div className="question-area">
                   <div className="question-text" dangerouslySetInnerHTML={{ __html: state.challenge.question }} />
                   <AnimatedButton cssClass="button button--true" clickHandler={() => handleAnswer('True')}><FaCheck /> True</AnimatedButton>
@@ -75,7 +78,7 @@ export default function App() {
               )}
             {/* Gameplay buttons */}
             {
-              Object.keys(state.challenge).length
+              state.inProgress
                 ? <>
                   <DifficultyDisplay difficulty={difficulty} />
                   <button className="reset-button" onClick={() => dispatch({ type: 'RESET' })}><FaRedoAlt /></button>
@@ -83,7 +86,7 @@ export default function App() {
                 : <>
                   <h2>Select a difficulty:</h2>
                   <Dropdown className="difficulty-selector" options={['easy', 'medium', 'hard']} value="easy" onChange={e => setDifficulty(e.value)} />
-                  <AnimatedButton cssClass="button button--start" clickHandler={async () => dispatch({ type: 'START_GAME', payload: await newChallenge() })}><FaPlay /> Start</AnimatedButton>
+                  <AnimatedButton cssClass="button button--start" clickHandler={() => dispatch({ type: 'START_GAME' })}><FaPlay /> Start</AnimatedButton>
                 </>
             }
             {/* didWin indicator */}
